@@ -33,7 +33,7 @@ namespace WinterUniverse
             _cc = GetComponent<CharacterController>();
             _cc.height = _pawn.PawnAnimator.Height;
             _cc.radius = _pawn.PawnAnimator.Radius;
-            _cc.center = _pawn.PawnAnimator.Height * Vector3.up / 2f;
+            _cc.center = _pawn.PawnAnimator.Height * 0.5f * Vector3.up;
         }
 
         public void HandleLocomotion()
@@ -65,28 +65,25 @@ namespace WinterUniverse
 
         private void HandleGravity()
         {
-            if (_pawn.UseGravity)
+            if (CanJump)
             {
-                if (CanJump)
-                {
-                    _jumpTimer = 0f;
-                    _groundedTimer = 0f;
-                    ApplyJumpForce();
-                }
-                _pawn.IsGrounded = _fallVelocity.y <= 0.1f && Physics.SphereCast(transform.position + _cc.center, _cc.radius, Vector3.down, out _groundHit, _cc.center.y - (_cc.radius / 2f), WorldManager.StaticInstance.LayerManager.ObstacleMask);
-                if (_pawn.IsGrounded)
-                {
-                    _groundedTimer = _timeToFall;
-                    _fallVelocity.y = WorldManager.StaticInstance.DataManager.Gravity / 5f;
-                }
-                else
-                {
-                    _groundedTimer -= Time.deltaTime;
-                    _fallVelocity.y += WorldManager.StaticInstance.DataManager.Gravity * Time.deltaTime;
-                }
-                _jumpTimer -= Time.deltaTime;
-                _cc.Move(_fallVelocity * Time.deltaTime);
+                _jumpTimer = 0f;
+                _groundedTimer = 0f;
+                ApplyJumpForce();
             }
+            _pawn.IsGrounded = _fallVelocity.y <= 0.1f && Physics.SphereCast(transform.position + _cc.center, _cc.radius, Vector3.down, out _groundHit, _cc.center.y - (_cc.radius / 2f), WorldManager.StaticInstance.LayerManager.ObstacleMask);
+            if (_pawn.IsGrounded)
+            {
+                _groundedTimer = _timeToFall;
+                _fallVelocity.y = WorldManager.StaticInstance.DataManager.Gravity / 5f;
+            }
+            else
+            {
+                _groundedTimer -= Time.deltaTime;
+                _fallVelocity.y += WorldManager.StaticInstance.DataManager.Gravity * Time.deltaTime;
+            }
+            _jumpTimer -= Time.deltaTime;
+            _cc.Move(_fallVelocity * Time.deltaTime);
         }
 
         private void HandleMovement()
@@ -108,7 +105,7 @@ namespace WinterUniverse
             {
                 _moveVelocity = Vector3.MoveTowards(_moveVelocity, Vector3.zero, _pawn.PawnStats.Deceleration.CurrentValue * Time.deltaTime);
             }
-            //_cc.Move(_moveVelocity * Time.deltaTime);
+            _cc.Move(_moveVelocity * Time.deltaTime);
         }
 
         private void HandleRotation()

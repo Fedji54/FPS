@@ -38,8 +38,6 @@ namespace WinterUniverse
         public bool Created;
 
         public bool IsPerfomingAction;
-        public bool UseRootMotion;
-        public bool UseGravity = true;
         public bool CanMove = true;
         public bool CanRotate = true;
 

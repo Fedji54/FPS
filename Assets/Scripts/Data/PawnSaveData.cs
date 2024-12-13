@@ -3,8 +3,8 @@ namespace WinterUniverse
     [System.Serializable]
     public class PawnSaveData
     {
+        public string MapName = "Forest";
         public string CharacterName = "Loner";
-
         public string Faction = "Loners";
 
         public float Health;
